@@ -7,6 +7,7 @@ import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import * as dotenv from 'dotenv';
+import { RolesGuard } from 'src/auth/guard/role.guard';
 dotenv.config()
 
 @Module({
@@ -23,7 +24,7 @@ dotenv.config()
 })
 ],
   controllers: [UserController],
-  providers: [UserService, JwtStrategy],
-  exports:[UserService, PassportModule, JwtStrategy]
+  providers: [UserService, JwtStrategy, RolesGuard],
+  exports:[UserService, PassportModule, JwtStrategy, TypeOrmModule]
 })
 export class UserModule {}

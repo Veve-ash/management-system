@@ -6,19 +6,19 @@ import { ForbiddenRoleException } from "../exception/role.exception";
 
 @Injectable()
 export class RolesGuard implements CanActivate{
-    constructor(private readonly reflector: Reflector, private readonly userService: UserService){}
+    constructor(private readonly reflector: Reflector, private userService: UserService){}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
        const roles = this.reflector.get<string[]>('roles', context.getHandler());
-       if (!roles) return true;
+       //if (!roles) return true;
 
        const request = context.switchToHttp().getRequest();
 
        if (request?.user){
-        const headers = request.headers;
+        const headers:Headers = request.headers;
         const user = await this.userService.user(headers);
 
-        if (!user || !roles.includes(user.role)){
+        if (!roles.includes((await user).role)){
             throw new ForbiddenRoleException(roles.join(' or '));
         }
         return true;
